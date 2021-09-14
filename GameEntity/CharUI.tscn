@@ -1,0 +1,153 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://Sprites/ui_skill_4.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/ui_skill_6.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/ui_skill_5.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/ui_skill_shade.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/ui_skill_3.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/ui_skill_2.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/ui_skill_1.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/ui_hp_mg.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/ui_hp_bg.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/ui_skill_bg.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/ui_hp_fg.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/ui_heart_0.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/ui_heart_4.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/ui_skill_green.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/ui_skill_fg.png" type="Texture" id=15]
+[ext_resource path="res://GameEntity/CharUI.gd" type="Script" id=16]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 7 ) ],
+"loop": true,
+"name": "s1",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ) ],
+"loop": true,
+"name": "s2",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "s5",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "s6",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "none",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "s4",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": true,
+"name": "s3",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "shade",
+"speed": 5.0
+} ]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource( 16 )
+
+[node name="HP_bar" type="TextureProgress" parent="."]
+margin_left = -681.072
+margin_top = -398.181
+margin_right = -457.072
+margin_bottom = -358.181
+value = 50.0
+texture_under = ExtResource( 9 )
+texture_over = ExtResource( 11 )
+texture_progress = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Skill_normal" type="TextureProgress" parent="."]
+margin_left = -690.866
+margin_top = -370.277
+margin_right = -626.866
+margin_bottom = -306.277
+value = 60.0
+texture_under = ExtResource( 10 )
+texture_over = ExtResource( 15 )
+texture_progress = ExtResource( 14 )
+fill_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Skill_special" type="TextureProgress" parent="."]
+margin_left = -513.5
+margin_top = -369.912
+margin_right = -449.5
+margin_bottom = -305.912
+texture_under = ExtResource( 10 )
+texture_over = ExtResource( 15 )
+texture_progress = ExtResource( 14 )
+fill_mode = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Small_heart_1" type="TextureProgress" parent="."]
+margin_left = -627.834
+margin_top = -354.483
+margin_right = -587.834
+margin_bottom = -314.483
+rect_pivot_offset = Vector2( -253.351, 0 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 13 )
+fill_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Small_heart_2" type="TextureProgress" parent="."]
+margin_left = -585.659
+margin_top = -351.896
+margin_right = -545.659
+margin_bottom = -311.896
+rect_pivot_offset = Vector2( -253.351, 0 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 13 )
+fill_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Small_heart_3" type="TextureProgress" parent="."]
+margin_left = -545.85
+margin_top = -353.499
+margin_right = -505.85
+margin_bottom = -313.499
+rect_pivot_offset = Vector2( -253.351, 0 )
+texture_under = ExtResource( 12 )
+texture_progress = ExtResource( 13 )
+fill_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Skill_n_status" type="AnimatedSprite" parent="."]
+position = Vector2( -658.659, -337.903 )
+frames = SubResource( 1 )
+animation = "shade"
+
+[node name="Skill_s_status" type="AnimatedSprite" parent="."]
+position = Vector2( -481.608, -338.653 )
+frames = SubResource( 1 )
+animation = "shade"

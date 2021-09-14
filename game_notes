@@ -1,0 +1,33 @@
+to do list in code
+----------------------------------------------------features to add
+	add obstacles			-wip
+	zombies hidden at start
+-----------------------------------------------------feature not yet possible
+	ranged arrow pierces
+	ranged bullet dont pierce but more stack
+------------------------------------------------------balancing related
+	enemy incerase detection range
+	enemy make more active
+	fandead add indicator when attacking
+
+------------------------------------------------------existing bugs
+	fandead still shoots projectile when dead
+	
+------------------------------------------------------art related
+	flare and pekora damage animation
+	
+------------------------------------------------------finished to do
+	next level
+	zombie faster attack cooldown
+	fandead faster attack animation
+	level end
+	ensure no enemy on same location
+	enemy spawn on room	
+	when attacking dont track mouse 
+	remake sprites 
+		smaller more boxlike to accomodate possible bullet hell scenarios
+	design gui goal
+	increase melee cooldown
+	add stacks for attack 
+	HP bar gui
+	cooldown and stack gui
