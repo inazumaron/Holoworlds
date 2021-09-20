@@ -3,13 +3,16 @@ extends Node
 
 #Character related data
 var main_char = 0
-var main_char_stats = {"HP": 0, "MAX_HP": 0, "ACCELERATION":0, "MAX_SPEED": 0, "BASE_DMG":0}
+var main_char_stats = {"HP": 0, "MAX_HP": 0, "ACCELERATION":0, "MAX_SPEED": 0, "ATTACK_DMG":0, "ATTACK_COOLDOWN":0, 
+					"ATTACK_EFFECT":0, "SPECIAL_COOLDOWN":0}
 
 var co_char_1 = 0
 var co_char_1_stats = {}
 var co_char_2 = 0
 var co_char_2_stats = {}
 
+var item1 = "pekora_collab"
+var item2 = "flare_collab"
 #Game related data
 var level = 1
 var level_list = []
@@ -76,8 +79,38 @@ func return_player_path():
 	elif main_char == 131:	#marine
 		return ""
 	elif main_char == 132:	#noel
-		return preload("res://PlayerEntity/Player_melee.tscn")
+		return preload("res://PlayerEntity/char_Noel.tscn")
 	elif main_char == 133:	#pekora
-		return ""
+		return preload("res://PlayerEntity/char_Pekora.tscn")
 	elif main_char == 134:	#rushia
 		return ""
+
+func is_char_blank(n):
+	if n == main_char:
+		if main_char_stats["ATTACK_DMG"] == 0:
+			return true
+		return false
+	if n == co_char_1:
+		if co_char_1_stats["ATTACK_DMG"] == 0:
+			return true
+		return false
+	if n == co_char_2:
+		if co_char_2_stats["ATTACK_DMG"] == 0:
+			return true
+		return false
+		
+func get_char_stat(n):
+	if n == main_char:
+		return main_char_stats
+	if n == co_char_1:
+		return co_char_1_stats
+	if n == co_char_2:
+		return co_char_2_stats
+		
+func update_char_stat(n, stats):
+	if n == main_char:
+		main_char_stats = stats
+	if n == co_char_1:
+		co_char_1_stats = stats
+	if n == co_char_2:
+		co_char_2_stats = stats

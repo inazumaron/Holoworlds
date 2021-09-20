@@ -24,16 +24,19 @@ var pos_timer = 0
 var last_anim_dir = 0 #0 - left, 1 - right
 var damage_anim_timer = 0
 
-var weapon_m = preload("res://PlayerEntity/flare_bow.tscn")
+var weapon_m = preload("res://PlayerEntity/pekora_bomb_handler.tscn")
 var weapon = weapon_m.instance()
 
 var ui = preload("res://GameEntity/CharUI.tscn")
 var ui_inst = ui.instance()
 
+var mid_range_guide = preload("res://PlayerEntity/mid_range_guide.tscn")
+var mrg_inst = mid_range_guide.instance()
+
 func _ready():
 	add_child(weapon)
 	
-	ui_inst.NORMAL_STACK = false	#normal can stack
+	ui_inst.NORMAL_STACK = true	#normal can stack
 	ui_inst.SPEC_STACK = false		#special can stack
 	ui_inst.N_STACK_MAX = weapon.STACK_MAX
 	ui_inst.S_STACK_MAX = 3			#max stack count of special
@@ -46,6 +49,11 @@ func _ready():
 	add_child(ui_inst)
 	
 	ui_manipulation(0)
+	
+	mrg_inst.MIN_D = weapon.MIN_DIST
+	mrg_inst.MAX_D = weapon.MAX_DIST
+	mrg_inst.parent = self
+	add_child(mrg_inst)
 
 func _physics_process(delta):
 	var axis = get_input_axis()

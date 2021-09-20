@@ -38,7 +38,7 @@ var projectile = preload("res://EnemyEntity/p_fandead.tscn")
 func _ready():
 	rng.seed = SEED
 	add_to_group("enemy_list")
-	$AnimatedSprite.play("Fandead_float")
+	change_animation("float")
 
 func rng_move(random):
 	var offset = deg2rad(rng.randi_range(0, 30))
@@ -157,3 +157,6 @@ func _on_VisibilityNotifier2D_screen_entered():
 
 func _on_VisibilityNotifier2D_screen_exited():
 	in_camera = false
+
+func _on_AnimatedSprite_animation_finished():
+	change_animation("float")

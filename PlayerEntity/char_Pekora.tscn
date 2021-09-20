@@ -1,7 +1,7 @@
 [gd_scene load_steps=32 format=2]
 
-[ext_resource path="res://Sprites/Char/c_flare_sprite.png" type="Texture" id=1]
-[ext_resource path="res://PlayerEntity/char_Flare.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/Char/c_pekora_sprite.png" type="Texture" id=1]
+[ext_resource path="res://PlayerEntity/char_Pekora.gd" type="Script" id=2]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -168,11 +168,11 @@ extents = Vector2( 9.15465, 9.30862 )
 [sub_resource type="CircleShape2D" id=29]
 radius = 20.3982
 
-[node name="Node2D" type="KinematicBody2D"]
+[node name="KinematicBody2D" type="KinematicBody2D"]
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 0, -15.1824 )
+position = Vector2( 0, -14.875 )
 frames = SubResource( 25 )
 animation = "damage_left"
 

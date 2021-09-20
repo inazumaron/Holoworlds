@@ -108,7 +108,6 @@ func Skill_special_update(n):
 	Update_special_anim()
 
 func Update_normal_anim():
-	print("una",n_stack_count)
 	if NORMAL_STACK:
 		if n_stack_count == 0:
 			$Skill_n_status.play("shade")
