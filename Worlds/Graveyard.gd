@@ -12,19 +12,31 @@ var room_list = [] #will hold every rooms initial creation spot
 
 onready var tileMap = $TileMap
 
-var player = GameHandler.return_player_path()
+var player = GameHandler.return_player_path(0)
+var c1_path = GameHandler.return_player_path(GameHandler.co_char_1)
+var c2_path = GameHandler.return_player_path(GameHandler.co_char_2)
 var e_1_1 = preload("res://EnemyEntity/e_g_zombie_basic.tscn")
 var e_1_2 = preload("res://EnemyEntity/e_g_fandead_basic.tscn")
 
+var item_handler = preload("res://GameEntity/ItemHandler.tscn")
+var IH_inst
+
+var active_char = 0 #0-main char, 1-collab char 1, 2- collab char 2
 var player_inst
+var collab_char_1 = "none"
+var collab_char_2 = "none"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 	level = GameHandler.level
+	GameHandler.curr_world_id = self
 	enemy_budget = level * 10
 	generate_level()
 	generate_player()
+	generate_collab()
+	IH_inst = item_handler.instance()
+	get_tree().get_root().add_child(IH_inst)
 
 func _process(delta):
 	enemy_check_timer += delta
@@ -41,14 +53,34 @@ func check_enemies():
 		print(len(enemy_list))
 		last_val = len(enemy_list)
 	if len(enemy_list) == 0:
-		print("level cleared")
-		player_inst.queue_free()
-		get_tree().change_scene("res://GameEntity/routeList.tscn")
+		level_end()
 
 func generate_player():
 	player_inst = player.instance()
 	player_inst.position = Vector2(100,100)
 	get_tree().get_root().add_child(player_inst)
+
+func generate_collab(): #generate characters if there are already existing collab mate before
+	if GameHandler.co_char_1 != 0:
+		collab_recruit(1,false)
+		print("recruited?")
+	if GameHandler.co_char_2 != 0:
+		collab_recruit(2,false)
+
+func collab_recruit(num, active): #call this in case of recruiting collab mid level
+	if num == 1:
+		if c1_path == player:
+			c1_path = GameHandler.return_player_path(GameHandler.co_char_1)
+		collab_char_1 = c1_path.instance()
+		collab_char_1.position = player_inst.position
+		get_tree().get_root().add_child(collab_char_1)
+		
+	if num == 2:
+		if c2_path == player:
+			c2_path = GameHandler.return_player_path(GameHandler.co_char_2)
+		collab_char_2 = c2_path.instance()
+		collab_char_2.position = player_inst.position
+		get_tree().get_root().add_child(collab_char_2)
 
 func generate_level():
 	var walker = Walker.new(Vector2(0,0), borders)
@@ -187,3 +219,14 @@ func generate_enemies(map):
 func rand_enemy():
 	var e_list = [e_1_1, e_1_2] #update this when more enemies available
 	return e_list[randi() % len(e_list)]
+
+func level_end():
+	print("level cleared")
+	GameHandler.next_level(player_inst.send_data())
+	player_inst.queue_free()
+	if collab_char_1 != "none":
+		collab_char_1.queue_free()
+	if collab_char_2 != "none":
+		collab_char_2.queue_free()
+	IH_inst.queue_free()
+	get_tree().change_scene("res://GameEntity/routeList.tscn")

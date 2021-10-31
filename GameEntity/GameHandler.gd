@@ -2,14 +2,17 @@ extends Node
 #For holding variable values
 
 #Character related data
+var main_char_active = true
 var main_char = 0
-var main_char_stats = {"HP": 0, "MAX_HP": 0, "ACCELERATION":0, "MAX_SPEED": 0, "ATTACK_DMG":0, "ATTACK_COOLDOWN":0, 
-					"ATTACK_EFFECT":0, "SPECIAL_COOLDOWN":0}
-
+var main_char_stats = {"CHAR_CODE":0, "HP": 0, "MAX_HP": 0, "MAX_SPEED": 0, "ATTACK_DMG":0, "ATTACK_COOLDOWN":0, 
+	"ATTACK_STACK":0 ,"ATTACK_EFFECT":0, "SPECIAL_CODE":0}
+	#Special code will just simply correspond to ability ID, 0 means no skill
+var co_1_active = false
 var co_char_1 = 0
-var co_char_1_stats = {}
+var co_char_1_stats = main_char_stats
+var co_2_active = false
 var co_char_2 = 0
-var co_char_2_stats = {}
+var co_char_2_stats = main_char_stats
 
 var item1 = "pekora_collab"
 var item2 = "flare_collab"
@@ -19,6 +22,7 @@ var level_list = []
 
 var MAX_LEVELS = 10		#how many levels 
 var WORLD_NUM = 5		#amount of available worlds
+var curr_world_id = "none"
 
 var worlds = []
 var pos = Vector2(0, MAX_LEVELS-1)
@@ -38,7 +42,7 @@ func comm_collision_layers():
 	pass
 
 func comm_attack_effects():
-	#0 - no additional effects
+	#0/1 - no additional effects
 	#%2 - knockback
 	pass
 
@@ -73,29 +77,31 @@ func move():
 	next_step = "none"
 	return pos
 
-func return_player_path():
-	if main_char == 130:	#flare
+func return_player_path(code):
+	if code == 0:
+		code = main_char
+	if code == 130:	#flare
 		return preload("res://PlayerEntity/char_Flare.tscn")
-	elif main_char == 131:	#marine
+	elif code == 131:	#marine
 		return ""
-	elif main_char == 132:	#noel
+	elif code == 132:	#noel
 		return preload("res://PlayerEntity/char_Noel.tscn")
-	elif main_char == 133:	#pekora
+	elif code == 133:	#pekora
 		return preload("res://PlayerEntity/char_Pekora.tscn")
-	elif main_char == 134:	#rushia
+	elif code == 134:	#rushia
 		return ""
 
 func is_char_blank(n):
 	if n == main_char:
-		if main_char_stats["ATTACK_DMG"] == 0:
+		if main_char_stats["CHAR_CODE"] == 0:
 			return true
 		return false
 	if n == co_char_1:
-		if co_char_1_stats["ATTACK_DMG"] == 0:
+		if co_char_1_stats["CHAR_CODE"] == 0:
 			return true
 		return false
 	if n == co_char_2:
-		if co_char_2_stats["ATTACK_DMG"] == 0:
+		if co_char_2_stats["CHAR_CODE"] == 0:
 			return true
 		return false
 		
@@ -114,3 +120,37 @@ func update_char_stat(n, stats):
 		co_char_1_stats = stats
 	if n == co_char_2:
 		co_char_2_stats = stats
+
+func next_level(char_data):
+	level += 1
+	save_data(char_data)
+
+func save_data(data):
+	var file = File.new()
+	
+	file.open("res://Data/save.sv", File.WRITE)
+	file.store_string(var2str(data))
+	file.close()
+	
+func load_data(path):
+	var file = File.new()
+	
+	file.open(path, File.READ)
+	var data = str2var(file.get_as_text())
+	file.close()
+	
+	return data
+
+func collab_recruit(stats,slot):
+	if slot == 1:
+		co_1_active = true
+		main_char_active = false
+		co_char_1_stats = stats
+		co_char_1 = stats["CHAR_CODE"]
+		curr_world_id.collab_recruit(slot,true)
+	if slot == 2:
+		co_2_active = true
+		main_char_active = false
+		co_char_2_stats = stats
+		co_char_2 = stats["CHAR_CODE"]
+		curr_world_id.collab_recruit(slot,true)

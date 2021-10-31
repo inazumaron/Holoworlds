@@ -14,10 +14,12 @@ var ATTACK_DAMAGE = 1
 var ATTACK_TYPE = 0
 var ATTACK_EFFECT = 0
 
+var SPECIAL_CODE = 0
 var SPECIAL_COOLDOWN = 1
 var SPECIAL_REGEN_TYPE = 0 #0 - auto, 1 - offensive, 2 - defensive
 
 var DAMAGE_ANIM_DUR = 0.2
+var ACTIVE = true			#for collab on field
 #---------------------------------
 var motion = Vector2.ZERO
 var pos_timer = 0
@@ -131,3 +133,19 @@ func ui_manipulation(n):
 		ui_inst.Skill_normal_update(-1)
 	elif n == 2:
 		ui_inst.Skill_special_update(-1)
+
+func send_data():
+	var data = {"CHAR_CODE":130, "HP": HP, "MAX_HP": MAX_HP, "MAX_SPEED": MAX_SPEED, "ATTACK_DMG":ATTACK_DAMAGE, 
+	"ATTACK_COOLDOWN":ATTACK_COOLDOWN, "ATTACK_STACK":ATTACK_STACK_COUNT ,"ATTACK_EFFECT":ATTACK_EFFECT, "SPECIAL_CODE":SPECIAL_CODE}
+	
+	return data
+
+func update_data(data):
+	HP = data["HP"]
+	MAX_HP = data["MAX_HP"]
+	MAX_SPEED = data["MAX_SPEED"]
+	ATTACK_DAMAGE = data["ATTACK_DMG"]
+	ATTACK_COOLDOWN = data["ATTACK_COOLDOWN"]
+	ATTACK_STACK_COUNT = data["ATTACK_STACK"]
+	ATTACK_EFFECT = data["ATTACK_EFFECT"]
+	SPECIAL_CODE = data["SPECIAL_CODE"]
