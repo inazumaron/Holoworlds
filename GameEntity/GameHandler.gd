@@ -2,7 +2,7 @@ extends Node
 #For holding variable values
 
 #Character related data
-var main_char_active = true
+var active_character = 0 #0- main, 1,2 collab
 var main_char = 0
 var main_char_stats = {"CHAR_CODE":0, "HP": 0, "MAX_HP": 0, "MAX_SPEED": 0, "ATTACK_DMG":0, "ATTACK_COOLDOWN":0, 
 	"ATTACK_STACK":0 ,"ATTACK_EFFECT":0, "SPECIAL_CODE":0}
@@ -142,15 +142,49 @@ func load_data(path):
 	return data
 
 func collab_recruit(stats,slot):
+	var return_val = 0
 	if slot == 1:
+		if active_character == 0:
+			return_val = main_char
+		else:
+			return_val = co_char_2
+		active_character = 1
 		co_1_active = true
-		main_char_active = false
 		co_char_1_stats = stats
 		co_char_1 = stats["CHAR_CODE"]
 		curr_world_id.collab_recruit(slot,true)
+		active_character = 1
 	if slot == 2:
+		if active_character == 0:
+			return_val = main_char
+		else:
+			return_val = co_char_1
+		active_character = 2
 		co_2_active = true
-		main_char_active = false
 		co_char_2_stats = stats
 		co_char_2 = stats["CHAR_CODE"]
 		curr_world_id.collab_recruit(slot,true)
+		active_character = 2
+	return return_val
+func switch_char(code):
+	var return_val = 0
+	if active_character == 0:
+		if code == co_char_1:
+			active_character = 1
+		if code == co_char_2:
+			active_character = 2
+		return_val = main_char
+	elif active_character == 1:
+		if code == main_char:
+			active_character = 0
+		if code == co_char_2:
+			active_character = 2
+		return_val = co_char_1
+	else:
+		if code == co_char_1:
+			active_character = 1
+		if code == main_char:
+			active_character = 0
+		return_val = co_char_2
+	curr_world_id.switch_active_char(active_character)
+	return return_val

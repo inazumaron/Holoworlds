@@ -21,7 +21,6 @@ var e_1_2 = preload("res://EnemyEntity/e_g_fandead_basic.tscn")
 var item_handler = preload("res://GameEntity/ItemHandler.tscn")
 var IH_inst
 
-var active_char = 0 #0-main char, 1-collab char 1, 2- collab char 2
 var player_inst
 var collab_char_1 = "none"
 var collab_char_2 = "none"
@@ -72,15 +71,46 @@ func collab_recruit(num, active): #call this in case of recruiting collab mid le
 		if c1_path == player:
 			c1_path = GameHandler.return_player_path(GameHandler.co_char_1)
 		collab_char_1 = c1_path.instance()
-		collab_char_1.position = player_inst.position
+		collab_char_1.position = GameHandler.player_pos
+		collab_char_1.ACTIVE = active
+		if active:
+			player_inst.activate(false)
+			if typeof(collab_char_2) != 4: #if not string
+				collab_char_2.activate(false)
 		get_tree().get_root().add_child(collab_char_1)
 		
 	if num == 2:
 		if c2_path == player:
 			c2_path = GameHandler.return_player_path(GameHandler.co_char_2)
 		collab_char_2 = c2_path.instance()
-		collab_char_2.position = player_inst.position
+		collab_char_2.position = GameHandler.player_pos
+		collab_char_2.ACTIVE = active
+		if active:
+			player_inst.activate(false)
+			if typeof(collab_char_1) != 4:
+				collab_char_1.activate(false)
 		get_tree().get_root().add_child(collab_char_2)
+
+func switch_active_char(code):
+	if code == 0:
+		player_inst.position = GameHandler.player_pos
+		player_inst.activate(true)
+		if typeof(collab_char_1) != 4:
+			collab_char_1.activate(false)
+		if typeof(collab_char_2) != 4:
+			collab_char_2.activate(false)
+	if code == 1:
+		collab_char_1.position = GameHandler.player_pos
+		collab_char_1.activate(true)
+		player_inst.activate(false)
+		if typeof(collab_char_2) != 4:
+			collab_char_2.activate(false)
+	if code == 2:
+		collab_char_2.position = GameHandler.player_pos
+		collab_char_2.activate(true)
+		player_inst.activate(false)
+		if typeof(collab_char_1) != 4:
+			collab_char_1.activate(false)
 
 func generate_level():
 	var walker = Walker.new(Vector2(0,0), borders)

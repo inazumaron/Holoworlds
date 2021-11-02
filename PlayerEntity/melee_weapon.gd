@@ -9,6 +9,7 @@ var TYPE = 0
 var EFFECT = 2 #1 - for no effects default
 var EVALUE = 100
 var STACK_MAX = 2
+var ACTIVE = true
 
 var swing_dir = 1 #left - right
 var can_swing = true
@@ -63,7 +64,7 @@ func _process(delta):
 		angle_offset += SWING_ANGLE*swing_dir*delta*SWING_SPEED
 
 func _on_Area2D_body_entered(body):
-	if body.has_method("take_damage") and body.is_in_group("enemy_list") and can_damage:
+	if body.has_method("take_damage") and body.is_in_group("enemy_list") and can_damage and ACTIVE:
 		self.connect("EntityHit",body,"take_damage")
 		emit_signal("EntityHit",DAMAGE, TYPE, EFFECT, EVALUE)
 		self.disconnect("EntityHit",body,"take_damage")

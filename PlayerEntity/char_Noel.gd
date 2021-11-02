@@ -50,27 +50,28 @@ func _ready():
 	ui_manipulation(0)
 
 func _physics_process(delta):
-	var axis = get_input_axis()
-	
-	if Input.is_action_just_pressed("mouse_click"):
-		ui_manipulation(1)
+	if ACTIVE:
+		var axis = get_input_axis()
 		
-	if Input.is_action_just_pressed("mouse_click_r"):
-		ui_manipulation(2)
-	
-	if damage_anim_timer > 0:
-		damage_anim_timer -= delta
-	
-	if axis == Vector2.ZERO:
-		apply_friction(ACCELERATION*delta)
-	else:
-		apply_movement(axis*ACCELERATION*delta)
-	motion = move_and_slide(motion)
-	
-	pos_timer += delta
-	if pos_timer >= POS_UPDATE_TIMER:
-		pos_timer = 0
-		GameHandler.player_pos = global_position
+		if Input.is_action_just_pressed("mouse_click"):
+			ui_manipulation(1)
+			
+		if Input.is_action_just_pressed("mouse_click_r"):
+			ui_manipulation(2)
+		
+		if damage_anim_timer > 0:
+			damage_anim_timer -= delta
+		
+		if axis == Vector2.ZERO:
+			apply_friction(ACCELERATION*delta)
+		else:
+			apply_movement(axis*ACCELERATION*delta)
+		motion = move_and_slide(motion)
+		
+		pos_timer += delta
+		if pos_timer >= POS_UPDATE_TIMER:
+			pos_timer = 0
+			GameHandler.player_pos = global_position
 
 func get_input_axis():
 	var axis = Vector2.ZERO
@@ -113,13 +114,14 @@ func anim_update(axis):
 			$AnimatedSprite.play("idle_right")
 
 func take_damage(damage, type, effect, eValue):
-	damage_anim_timer = DAMAGE_ANIM_DUR
-	HP -= damage
-	print("HP: ",HP)
-	if HP <= 0:
-		print("dead")
-	else:
-		ui_manipulation(0)
+	if ACTIVE:
+		damage_anim_timer = DAMAGE_ANIM_DUR
+		HP -= damage
+		print("HP: ",HP)
+		if HP <= 0:
+			print("dead")
+		else:
+			ui_manipulation(0)
 
 func ui_manipulation(n):
 	#	0 - update life
@@ -149,3 +151,18 @@ func update_data(data):
 	ATTACK_STACK_COUNT = data["ATTACK_STACK"]
 	ATTACK_EFFECT = data["ATTACK_EFFECT"]
 	SPECIAL_CODE = data["SPECIAL_CODE"]
+
+func activate(x):
+	if x:
+		ACTIVE = true
+		$Camera2D.current = true
+		self.visible = true
+		$CollisionShape2D.disabled = false
+		weapon.ACTIVE = true
+	else:
+		ACTIVE = false
+		$Camera2D.current = false
+		self.visible = false
+		$CollisionShape2D.disabled = true
+		weapon.ACTIVE = false
+		

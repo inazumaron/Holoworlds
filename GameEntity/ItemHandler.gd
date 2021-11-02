@@ -50,7 +50,18 @@ func item_use(item_name,src): #src is if its from item1 or item2
 	if item[1] == "collab_ticket":
 		collab_ticket_handler(item,src)
 	if item[1] == "switch_character":
-		pass
+		switch_character_handler(item,src)
+
+func switch_character_handler(item,src):
+	var code = char_name_to_code(item[0])
+	var new_code = GameHandler.switch_char(code)
+	if src == 1:
+		print("updating ",item_1)
+		item_1 = char_code_to_name(new_code) + " switch"
+		print(item_1)
+	if src == 2:
+		item_2 = char_code_to_name(new_code) + " switch"
+	update_items()
 
 func update_items(): #update items on gamehandler side
 	GameHandler.item1 = item_1
@@ -65,25 +76,26 @@ func get_item_value(item_name):
 	if item_name == "collab_ticket":
 		return ["Collab ticket", "collab_ticket", 0, 1, 0]
 	if item_name == "Flare switch":
-		return ["Flare!", "switch_character", 0, 1, 0]
+		return ["Flare", "switch_character", 0, 1, 0]
 	if item_name == "Noel switch":
-		return ["Noel!", "switch_character", 0, 1, 0]
+		return ["Noel", "switch_character", 0, 1, 0]
 	if item_name == "Pekora switch":
-		return ["Pekora!", "switch_character", 0, 1, 0]
+		return ["Pekora", "switch_character", 0, 1, 0]
 
 func collab_ticket_handler(item, src):
+	var new_code = 0
 	if item[0] == "Pekora collab ticket":
 		var data = get_char_data(133)
-		GameHandler.collab_recruit(data,src)
-		ticket_update(133,src)
+		new_code = GameHandler.collab_recruit(data,src)
+		ticket_update(new_code,src)
 	if item[0] == "Flare collab ticket":
 		var data = get_char_data(130)
-		GameHandler.collab_recruit(data,src)
-		ticket_update(130,src)
+		new_code = GameHandler.collab_recruit(data,src)
+		ticket_update(new_code,src)
 	if item[0] == "Noel collab ticket":
 		var data = get_char_data(132)
-		GameHandler.collab_recruit(data,src)
-		ticket_update(132,src)
+		new_code = GameHandler.collab_recruit(data,src)
+		ticket_update(new_code,src)
 	if item[0] == "Normal collab ticket":		#map restricted characters
 		pass
 	if item[0] == "Universal collab ticket":	#all available characters unlocked
@@ -129,3 +141,15 @@ func char_code_to_name(code):
 		return "Pekora"
 	if code == 134:
 		return "Rushia"
+
+func char_name_to_code(nam):
+	if nam == "Flare":
+		return 130
+	if nam == "Marine":
+		return 131
+	if nam == "Noel":
+		return 132
+	if nam == "Pekora":
+		return 133
+	if nam == "Rushia":
+		return 134

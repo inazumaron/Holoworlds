@@ -13,23 +13,24 @@ var can_attack = true
 var cooldown_counter = 0
 
 var projectile = preload("res://PlayerEntity/flare_arrow_normal.tscn")
+var ACTIVE = true
 
 func _ready():
 	$AnimatedSprite.play("loading")
 
 func _process(delta):
-	
-	look_at(get_global_mouse_position())
-	
-	if cooldown_counter < COOLDOWN:
-		cooldown_counter += delta
-	else:
-		$AnimatedSprite.play("loaded")
+	if ACTIVE:
+		look_at(get_global_mouse_position())
 		
-	if Input.is_action_pressed("mouse_click") and cooldown_counter >= COOLDOWN:
-		shoot()
-		cooldown_counter = 0
-		$AnimatedSprite.play("loading")
+		if cooldown_counter < COOLDOWN:
+			cooldown_counter += delta
+		else:
+			$AnimatedSprite.play("loaded")
+			
+		if Input.is_action_pressed("mouse_click") and cooldown_counter >= COOLDOWN:
+			shoot()
+			cooldown_counter = 0
+			$AnimatedSprite.play("loading")
 
 func shoot():
 	var projectile_inst = projectile.instance()

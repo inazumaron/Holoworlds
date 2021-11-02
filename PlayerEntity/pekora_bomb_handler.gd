@@ -16,22 +16,24 @@ var cooldown_counter = 0
 
 var projectile = preload("res://PlayerEntity/pekora_bomb.tscn")
 
+var ACTIVE = true
+
 func _ready():
 	pass
 
 func _process(delta):
-	
-	look_at(get_global_mouse_position())
-	
-	if cooldown_counter < COOLDOWN:
-		cooldown_counter += delta
-		visible = false
-	else:
-		visible = true
+	if ACTIVE:
+		look_at(get_global_mouse_position())
 		
-	if Input.is_action_pressed("mouse_click") and cooldown_counter >= COOLDOWN:
-		throw()
-		cooldown_counter = 0
+		if cooldown_counter < COOLDOWN:
+			cooldown_counter += delta
+			visible = false
+		else:
+			visible = true
+			
+		if Input.is_action_pressed("mouse_click") and cooldown_counter >= COOLDOWN:
+			throw()
+			cooldown_counter = 0
 
 func throw():
 	var projectile_inst = projectile.instance()
