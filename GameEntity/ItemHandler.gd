@@ -64,9 +64,7 @@ func switch_character_handler(item,src):
 	update_items()
 
 func update_items(): #update items on gamehandler side
-	GameHandler.item1 = item_1
-	GameHandler.item2 = item_2
-	print(item_1," ", item_2)
+	GameHandler.update_item(item_1,item_2)
 	
 func get_item_value(item_name):
 	if item_name == "pekora_collab":

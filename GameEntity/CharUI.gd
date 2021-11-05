@@ -24,6 +24,7 @@ var s_cooldown_counter = 0
 var small_hp_id = 1			#1,2, or 3
 
 func _ready():
+	update_items()
 	if H2_A:
 		$Small_heart_2.visible = false
 	if H3_A:
@@ -150,3 +151,27 @@ func Update_special_anim():
 			$Skill_s_status.play("shade")
 		else:
 			$Skill_s_status.play("none")
+
+func update_items():
+	var item_1_name = GameHandler.item1
+	var temp = get_item_animation(item_1_name)
+	$Item_1_icon.play(temp[0])
+	$Item_1_icon.frame = temp[1]
+	var item_2_name = GameHandler.item2
+	temp = get_item_animation(item_2_name)
+	$Item_2_icon.play(temp[0])
+	$Item_2_icon.frame = temp[1]
+		
+func get_item_animation(x):
+	if "collab" in x:
+		return ["tickets", item_frame_char(x.to_lower())]
+	if "switch" in x:
+		return ["char_switch", item_frame_char(x.to_lower())]
+
+func item_frame_char(x):
+	if "flare" in x:
+		return 2
+	if "noel" in x:
+		return 3
+	if "pekora" in x:
+		return 4

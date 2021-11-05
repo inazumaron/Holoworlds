@@ -260,3 +260,10 @@ func level_end():
 		collab_char_2.queue_free()
 	IH_inst.queue_free()
 	get_tree().change_scene("res://GameEntity/routeList.tscn")
+
+func update_player_items():
+	player_inst.ui_manipulation(3)
+	if typeof(collab_char_1) != 4:
+		collab_char_1.ui_manipulation(3)
+	if typeof(collab_char_2) != 4:
+		collab_char_2.ui_manipulation(3)

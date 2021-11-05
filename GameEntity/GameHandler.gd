@@ -166,6 +166,7 @@ func collab_recruit(stats,slot):
 		curr_world_id.collab_recruit(slot,true)
 		active_character = 2
 	return return_val
+
 func switch_char(code):
 	var return_val = 0
 	if active_character == 0:
@@ -188,3 +189,8 @@ func switch_char(code):
 		return_val = co_char_2
 	curr_world_id.switch_active_char(active_character)
 	return return_val
+
+func update_item(x,y):
+	item1 = x
+	item2 = y
+	curr_world_id.update_player_items()

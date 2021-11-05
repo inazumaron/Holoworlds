@@ -127,7 +127,7 @@ func ui_manipulation(n):
 	#	0 - update life
 	#	1 - normal click
 	#	2 - special click
-	#
+	#	3 - update items
 	if n == 0:
 		ui_inst.update_HP(HP,MAX_HP)
 		ui_inst.update_shp_self(HP,MAX_HP)
@@ -135,6 +135,8 @@ func ui_manipulation(n):
 		ui_inst.Skill_normal_update(-1)
 	elif n == 2:
 		ui_inst.Skill_special_update(-1)
+	elif n == 3:
+		ui_inst.update_items()
 
 func send_data():
 	var data = {"CHAR_CODE":130, "HP": HP, "MAX_HP": MAX_HP, "MAX_SPEED": MAX_SPEED, "ATTACK_DMG":ATTACK_DAMAGE, 
