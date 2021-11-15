@@ -54,7 +54,7 @@ func create_room(pos,n,start_pos):
 	var x_range = [INF,-INF]
 	var y_range = [INF,-INF]
 	for data in room_list:
-		if data[0] == pos:
+		if data[4] == pos:
 			room_exist = true
 	if room_exist == false:
 		var size = Vector2(randi() % 2 + n, randi() % 2 + n)
@@ -81,8 +81,7 @@ func create_room(pos,n,start_pos):
 		for cell in room_cells:
 			if !(cell.x == x_range[0] or cell.x == x_range[1] or cell.y == y_range[0] or cell.y == y_range[1]):
 				room_cells_inside.append(cell)
-		if !start_pos:
-			room_list.append([pos,min(size.x,size.y),room_cells_inside])
+		room_list.append([top_left_corner,min(size.x,size.y),room_cells_inside,start_pos,pos])
 				
 func widen(pos):
 	var size = Vector2(3, 3)

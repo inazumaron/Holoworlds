@@ -123,7 +123,7 @@ func generate_level():
 	
 	#setting walkable path
 	for location in map:
-		tileMap.set_cellv(location, 0)
+		tileMap.set_cellv(location, 24 + randi()%2)
 		if location.x < min_coor.x:
 			min_coor.x = location.x
 		if location.x > max_coor.x:
@@ -135,46 +135,63 @@ func generate_level():
 	
 	#adding tiles to whole map
 	# 0 - def
-	# 1 - def top
-	# 5 - def right
-	# 6 - def left
-	# 7 - def bot
-	# 18 - top left
-	# 19 - top right
-	# 20 - bot left
-	# 21 - bot right
-	# 2 - top
-	# 4 - top grass above wall
-	# 16 - top grass
+	# 2 - wall start
+	# 4 - wall end
+	# 6 - dg
+	# 8 - dg right g
+	# 10 - dg left g
+	# 12 - dg up
+	# 14 - dg right ws
+	# 16 - dg left ws
+	# 18 - dg right we
+	# 20 - dg left we
+	# 22 - dg topright g (top and right not g)
+	# 24 - dg topleft g
+	# 26 - wall right
+	# 28 - wall left
+	# 30 - dg top and right g
+	# 32 - dg top and left g
+	# 34 - tomb row up/down
+	# 38 - tomb col left/right
+	# 42 - 2x2 tomb
+	# 44 - 1 tomb tl/tr/bl/br
+	# 52 - 3x3 tl/tm/tr/ml...
+	# 61 - m statue f/d/z
+	# 67 - b statue c/r/o
 	for y_coor in range (min_coor.y-10, max_coor.y+10):
 		for x_coor in range (min_coor.x-10, max_coor.x+10):
 			if tileMap.get_cellv(Vector2(x_coor,y_coor)) == -1:
-				if tileMap.get_cellv(Vector2(x_coor,y_coor + 1)) == 0:
-					tileMap.set_cellv(Vector2(x_coor,y_coor - 1), 4)
-					tileMap.set_cellv(Vector2(x_coor,y_coor), 2)
-					tileMap.set_cellv(Vector2(x_coor,y_coor + 1), 1)
+				if cell_free(x_coor,y_coor + 1):
+					tileMap.set_cellv(Vector2(x_coor,y_coor - 1), 24 + 4)
+					tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 2)
+					#no texture for wall start side
 				else:
-					tileMap.set_cellv(Vector2(x_coor,y_coor), 16)
-					if tileMap.get_cellv(Vector2(x_coor,y_coor - 1)) == 0:
-						tileMap.set_cellv(Vector2(x_coor,y_coor - 1), 7)
-					if tileMap.get_cellv(Vector2(x_coor + 1,y_coor)) == 0:
-						tileMap.set_cellv(Vector2(x_coor + 1,y_coor), 6)
-					if tileMap.get_cellv(Vector2(x_coor - 1,y_coor)) == 0:
-						tileMap.set_cellv(Vector2(x_coor - 1,y_coor), 5)
-					if tileMap.get_cellv(Vector2(x_coor + 1,y_coor)) == 1:
-						tileMap.set_cellv(Vector2(x_coor + 1,y_coor), 18)
-					if tileMap.get_cellv(Vector2(x_coor - 1,y_coor)) == 1:
-						tileMap.set_cellv(Vector2(x_coor - 1,y_coor), 19)
-					if tileMap.get_cellv(Vector2(x_coor,y_coor - 1)) == 6:
-						tileMap.set_cellv(Vector2(x_coor,y_coor - 1), 20)
-					if tileMap.get_cellv(Vector2(x_coor,y_coor - 1)) == 5:
-						tileMap.set_cellv(Vector2(x_coor,y_coor - 1), 21)
+					tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 6)
+					if cell_free(x_coor,y_coor - 1) and cell_free(x_coor + 1,y_coor):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 30)
+					elif cell_free(x_coor + 1,y_coor):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 8)
+					elif cell_free(x_coor,y_coor - 1):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 12)
+					elif cell_free(x_coor,y_coor - 1) and cell_free(x_coor - 1,y_coor):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 32)
+					elif cell_free(x_coor - 1,y_coor):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 10)
+					elif cell_free(x_coor + 1 ,y_coor - 1):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 22)
+					elif cell_free(x_coor - 1,y_coor - 1):
+						tileMap.set_cellv(Vector2(x_coor,y_coor), 24 + 24)
 					
 		
 	generate_obtsacles()
 	tileMap.update_bitmask_region(borders.position, borders.end)
 	
 	generate_enemies(map)
+
+func cell_free(x,y): #mainly used in generate level function
+	if tileMap.get_cellv(Vector2(x,y)) == 24 or tileMap.get_cellv(Vector2(x,y)) == 25:
+		return true
+	return false
 
 func adjacent_free(map, loc):
 	var adj_free = true
@@ -187,42 +204,133 @@ func adjacent_free(map, loc):
 
 func generate_obtsacles():
 	#obstacles in tilemap
-	# no change				22%
-	# 3 - tile variant 		30%
-	# 8 - 11 light blockage	32%
-	# 12 - 15 big blockage	16%
 	for temp in room_list:
-		var cell_list = temp[2]
-		for cell in cell_list:
+		if temp[3] == false:
 			var rand_num = randf()
-			if rand_num < 0.04:
-				tileMap.set_cellv(cell,15)
-			elif rand_num < 0.08:
-				tileMap.set_cellv(cell,14)
-			elif rand_num < 0.12:
-				tileMap.set_cellv(cell,13)
-			elif rand_num < 0.16:
-				tileMap.set_cellv(cell,12)
-			elif rand_num < 0.24:
-				tileMap.set_cellv(cell,11)
-			elif rand_num < 0.32:
-				tileMap.set_cellv(cell,10)
-			elif rand_num < 0.40:
-				tileMap.set_cellv(cell,9)
-			elif rand_num < 0.48:
-				tileMap.set_cellv(cell,8)
-			elif rand_num < 0.78:
-				tileMap.set_cellv(cell,3)
+			if rand_num < 0.1:
+				generate_room(temp[0],temp[1],0)
+			elif rand_num < 0.2:
+				generate_room(temp[0],temp[1],1)
+			elif rand_num < 0.3:
+				generate_room(temp[0],temp[1],2)
+			elif rand_num < 0.4:
+				generate_room(temp[0],temp[1],3)
+			elif rand_num < 0.5:
+				generate_room(temp[0],temp[1],4)
+			elif rand_num < 0.6:
+				generate_room(temp[0],temp[1],5)
+			elif rand_num < 0.7:
+				generate_room(temp[0],temp[1],6)
+			elif rand_num < 0.8:
+				generate_room(temp[0],temp[1],7)
+			elif rand_num < 0.85:
+				generate_room(temp[0],temp[1],8)
+			elif rand_num < 0.9:
+				generate_room(temp[0],temp[1],9)
+			elif rand_num < 0.95:
+				generate_room(temp[0],temp[1],10)
+			else:
+				generate_room(temp[0],temp[1],11)
+
+func generate_room(pos,s,n): #(x,y) size(w,h) room var n
+	var x_coor = pos.x
+	var y_coor = pos.y
+	var num = (randi()%2)*2
+	var num2 = randi()%3
+	if n == 0:#empty
+		pass
+	elif n == 1:#2 even tomb row
+		for x in range(1,s-1):
+			tileMap.set_cellv(Vector2(x_coor+x,y_coor+1), 58 + randi()%2 + num)
+			if s >= 7:
+				tileMap.set_cellv(Vector2(x_coor+x,y_coor+5), 58 + randi()%2 + num)
+	elif n == 2:#3 even tomb row
+		for x in range(1,s-1):
+			tileMap.set_cellv(Vector2(x_coor+x,y_coor+1), 58 + randi()%2 + num)
+			if s >= 5:
+				tileMap.set_cellv(Vector2(x_coor+x,y_coor+3), 58 + randi()%2 + num)
+			if s >= 7:
+				tileMap.set_cellv(Vector2(x_coor+x,y_coor+5), 58 + randi()%2 + num)
+	elif n == 3:#2 uneven tomb row
+		for x in range(1,s-1):
+			if randi()%3 < 2:
+				tileMap.set_cellv(Vector2(x_coor+x,y_coor+1), 58 + randi()%2 + num)
+			if s >= 5 and randi()%3 < 2:
+				tileMap.set_cellv(Vector2(x_coor+x,y_coor+3), 58 + randi()%2 + num)
+			if s >= 7 and randi()%3 < 2:
+				tileMap.set_cellv(Vector2(x_coor+x,y_coor+5), 58 + randi()%2 + num)
+	elif n == 4:#2 even tomb col
+		for y in range(1,s-1):
+			tileMap.set_cellv(Vector2(x_coor+1,y_coor+y), 62 + randi()%2 + num)
+			if s >= 7:
+				tileMap.set_cellv(Vector2(x_coor+5,y_coor+y), 62 + randi()%2 + num)
+	elif n == 5:#3 even tomb col
+		for y in range(1,s-1):
+			tileMap.set_cellv(Vector2(x_coor+1,y_coor+y), 62 + randi()%2 + num)
+			if s >= 5:
+				tileMap.set_cellv(Vector2(x_coor+3,y_coor+y), 62 + randi()%2 + num)
+			if s >= 7:
+				tileMap.set_cellv(Vector2(x_coor+5,y_coor+y), 62 + randi()%2 + num)
+	elif n == 6:#2 uneven tomb col
+		for y in range(1,s-1):
+			if randi()%3 < 2:
+				tileMap.set_cellv(Vector2(x_coor+1,y_coor+y), 62 + randi()%2 + num)
+			if s >= 5 and randi()%3 < 2:
+				tileMap.set_cellv(Vector2(x_coor+3,y_coor+y), 62 + randi()%2 + num)
+			if s >= 7 and randi()%3 < 2:
+				tileMap.set_cellv(Vector2(x_coor+5,y_coor+y), 62 + randi()%2 + num)
+	elif n == 7:#3x3 tomb center
+		var offset = 0
+		if s>=5:
+			offset = 1
+		if s>=7:
+			offset = 2
+		tileMap.set_cellv(Vector2(x_coor+offset,y_coor+offset), 76)
+		tileMap.set_cellv(Vector2(x_coor+offset+1,y_coor+offset), 77)
+		tileMap.set_cellv(Vector2(x_coor+offset+2,y_coor+offset), 78)
+		tileMap.set_cellv(Vector2(x_coor+offset,y_coor+offset+1), 79)
+		tileMap.set_cellv(Vector2(x_coor+offset+1,y_coor+offset+1), 80)
+		tileMap.set_cellv(Vector2(x_coor+offset+2,y_coor+offset+1), 81)
+		tileMap.set_cellv(Vector2(x_coor+offset,y_coor+offset+2), 82)
+		tileMap.set_cellv(Vector2(x_coor+offset+1,y_coor+offset+2), 83)
+		tileMap.set_cellv(Vector2(x_coor+offset+2,y_coor+offset+2), 84)
+	elif n == 8:#large statue at center
+		var offset = 0
+		if s>=5:
+			offset = 1
+		if s>=7:
+			offset = 2
+		if offset>0:
+			tileMap.set_cellv(Vector2(x_coor+offset,y_coor+offset), 91 + num2*6)
+			tileMap.set_cellv(Vector2(x_coor+offset+1,y_coor+offset), 92 + num2*6)
+			tileMap.set_cellv(Vector2(x_coor+offset,y_coor+offset+1), 93 + num2*6)
+			tileMap.set_cellv(Vector2(x_coor+offset+1,y_coor+offset+1), 94 + num2*6)
+			tileMap.set_cellv(Vector2(x_coor+offset,y_coor+offset+2), 95 + num2*6)
+			tileMap.set_cellv(Vector2(x_coor+offset+1,y_coor+offset+2), 96 + num2*6)
+	elif n == 9:#2 med statues
+		if s >=3: #1 statue
+			tileMap.set_cellv(Vector2(x_coor+1,y_coor+1), 85 + num2*2)
+			tileMap.set_cellv(Vector2(x_coor+1,y_coor+2), 86 + num2*2)
+		if s >=5:
+			tileMap.set_cellv(Vector2(x_coor+3,y_coor+1), 85 + num2*2)
+			tileMap.set_cellv(Vector2(x_coor+3,y_coor+2), 86 + num2*2)
+			
+	elif n == 10:#2x2 tomb at corners
+		pass
+	elif n == 11:#9 tombs evenly spaced 
+		pass
 
 func generate_enemies(map):
 	var e_pos = []
 	var e_val = []
 	
-	var room_budget = enemy_budget/len(room_list)
+	var room_budget = enemy_budget/max((len(room_list)-1),1)
 	
 	for room in room_list:
 		var room_cell = room[2]
 		var budget = room_budget
+		if room[3]: #if room is start pos, no enemies to allocate here
+			budget = 0
 		while budget > 0 and len(room_cell) > 0:
 			for cell in room_cell:
 				if randf() < 0.1:
@@ -254,9 +362,9 @@ func level_end():
 	print("level cleared")
 	GameHandler.next_level(player_inst.send_data())
 	player_inst.queue_free()
-	if collab_char_1 != "none":
+	if typeof(collab_char_1) != 4:
 		collab_char_1.queue_free()
-	if collab_char_2 != "none":
+	if typeof(collab_char_2) != 4:
 		collab_char_2.queue_free()
 	IH_inst.queue_free()
 	get_tree().change_scene("res://GameEntity/routeList.tscn")
