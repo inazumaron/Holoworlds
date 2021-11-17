@@ -34,12 +34,16 @@ var is_dead = false
 var player = null
 
 var rng = RandomNumberGenerator.new()
+var buried = true
+var delayFunctCode = 0
+var delayFunctTime = 0
 
 signal EntityHit(damage,type, effect)
 
 func _ready():
 	rng.seed = SEED
 	add_to_group("enemy_list")
+	$AnimatedSprite.play("idle_buried")
 
 func rng_move():
 	var offset = deg2rad(rng.randi_range(0, 30))
@@ -50,6 +54,11 @@ func rng_move():
 		direction += offset
 
 func _physics_process(delta):
+	if delayFunctTime >0 and delayFunctCode != 0:
+		delayFunctTime -= delta
+		if delayFunctTime <= 0:
+			delayFunct()
+			
 	if in_camera and !damaged:
 		
 		general_timer += delta
@@ -63,33 +72,34 @@ func _physics_process(delta):
 			general_timer = 0
 		
 		#-------------------------------------moving randomly
-		if !chasing:
-			if move_count >= .5:
-				move_count = 0
-				rng_move()
-			
-			if move_count > 0.3:
-				can_move = true
+		if !buried:
+			if !chasing:
+				if move_count >= .5:
+					move_count = 0
+					rng_move()
+				
+				if move_count > 0.3:
+					can_move = true
+				else:
+					can_move = false
 			else:
-				can_move = false
-		else:
-			if move_count >= .1:
-				move_count = 0
-				rng_move()
-				if !attacking and attack_cooldown_timer >= ATTACK_COOLDOWN:
-					check_player_in_range()
-			can_move = true
+				if move_count >= .1:
+					move_count = 0
+					rng_move()
+					if !attacking and attack_cooldown_timer >= ATTACK_COOLDOWN:
+						check_player_in_range()
+				can_move = true
 			
-		if can_move and !attacking:
-			$AnimatedSprite.play("walk")
-			$AnimatedSprite.scale.x = sgn(movement.x)
-			apply_movement(ACCELERATION*delta)
-		elif !attacking:
-			$AnimatedSprite.play("idle")
-			apply_friction(ACCELERATION*delta)
-		else:
-			apply_friction(ACCELERATION*delta)
-		movement = move_and_slide(movement)
+			if can_move and !attacking:
+				$AnimatedSprite.play("walk")
+				$AnimatedSprite.scale.x = sgn(movement.x)
+				apply_movement(ACCELERATION*delta)
+			elif !attacking:
+				$AnimatedSprite.play("idle")
+				apply_friction(ACCELERATION*delta)
+			else:
+				apply_friction(ACCELERATION*delta)
+			movement = move_and_slide(movement)
 	else:
 		if knock_back_duration > 0:
 			knock_back_duration -= delta
@@ -117,7 +127,17 @@ func check_player_near():
 	$PlayerDetect.rotation = global_position.angle_to_point(GameHandler.player_pos)
 	if $PlayerDetect.is_colliding():
 		chasing = true
-		
+		if buried:
+			$AnimatedSprite.play("rising")
+			delayFunctTime = 1
+			delayFunctCode = 1
+
+func delayFunct():
+	if delayFunctCode == 1:
+		buried = false
+		$AnimatedSprite.play("idle")
+		delayFunctCode = 0
+
 func check_player_in_range():
 	if player != null:
 		attacking = true
@@ -134,23 +154,24 @@ func apply_movement(acceleration):
 	movement = movement.clamped(MAX_SPEED)
 
 func take_damage(dam, type, effect, eValue):
-	#type is either physical, magic or true
-	if effect % 2 == 0 and effect != 0: #knockback effect
-		direction = 180 + (GameHandler.player_pos).angle_to_point(global_position) #get direction of hit
-		knock_back_duration = DAMAGE_ANIMATION
-		debuff_val = eValue
-	
-	hp -= dam
-	if hp <= 0:
-		is_dead = true
-		visible = false
-		position = Vector2(0,0)
+	if !buried:
+		#type is either physical, magic or true
+		if effect % 2 == 0 and effect != 0: #knockback effect
+			direction = 180 + (GameHandler.player_pos).angle_to_point(global_position) #get direction of hit
+			knock_back_duration = DAMAGE_ANIMATION
+			debuff_val = eValue
 		
-	#play damaged animation
-	$AnimatedSprite.play("damaged")
-	damaged = true
-	yield(get_tree().create_timer(DAMAGE_ANIMATION),"timeout")
-	damaged = false
+		hp -= dam
+		if hp <= 0:
+			is_dead = true
+			visible = false
+			position = Vector2(0,0)
+			
+		#play damaged animation
+		$AnimatedSprite.play("damaged")
+		damaged = true
+		yield(get_tree().create_timer(DAMAGE_ANIMATION),"timeout")
+		damaged = false
 
 func _on_VisibilityNotifier2D_screen_entered():
 	in_camera = true

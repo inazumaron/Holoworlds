@@ -30,7 +30,7 @@ func _ready():
 	randomize()
 	level = GameHandler.level
 	GameHandler.curr_world_id = self
-	enemy_budget = level * 10
+	enemy_budget = 5 + (level * 5)
 	generate_level()
 	generate_player()
 	generate_collab()
@@ -316,9 +316,21 @@ func generate_room(pos,s,n): #(x,y) size(w,h) room var n
 			tileMap.set_cellv(Vector2(x_coor+3,y_coor+2), 86 + num2*2)
 			
 	elif n == 10:#2x2 tomb at corners
-		pass
+		tileMap.set_cellv(Vector2(x_coor,y_coor), 66 + randi()%2)
+		tileMap.set_cellv(Vector2(x_coor+s-1,y_coor), 66 + randi()%2)
+		tileMap.set_cellv(Vector2(x_coor,y_coor+s-1), 66 + randi()%2)
+		tileMap.set_cellv(Vector2(x_coor+s-1,y_coor+s-1), 66 + randi()%2)
 	elif n == 11:#9 tombs evenly spaced 
-		pass
+		if s > 3:
+			tileMap.set_cellv(Vector2(x_coor,y_coor), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor+ceil(s/2),y_coor), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor+s-1,y_coor), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor,y_coor+ceil(s/2)), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor+ceil(s/2),y_coor+ceil(s/2)), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor+s-1,y_coor+ceil(s/2)), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor,y_coor+s-1), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor+ceil(s/2),y_coor+s-1), 68 + randi()%8)
+			tileMap.set_cellv(Vector2(x_coor+s-1,y_coor+s-1), 68 + randi()%8)
 
 func generate_enemies(map):
 	var e_pos = []
@@ -333,7 +345,7 @@ func generate_enemies(map):
 			budget = 0
 		while budget > 0 and len(room_cell) > 0:
 			for cell in room_cell:
-				if randf() < 0.1:
+				if randf() < 0.2 and tileMap.get_cellv(cell) < 30: #random chance and cell free
 					var temp = rand_enemy()
 					var temp_inst = temp.instance()
 					if temp_inst.COST <= budget+1:
