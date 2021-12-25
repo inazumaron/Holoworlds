@@ -30,7 +30,7 @@ func _ready():
 	randomize()
 	level = GameHandler.level
 	GameHandler.curr_world_id = self
-	enemy_budget = 5 + (level * 5)
+	enemy_budget = 5 + (level * 7)
 	generate_level()
 	generate_player()
 	generate_collab()

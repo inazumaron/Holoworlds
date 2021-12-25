@@ -10,6 +10,12 @@ var step_history = []
 var room_list = []	#contains cells inside rooms, avoid duplicates
 var steps_since_turn = 0
 
+#--------------------------Parameters for making custom maps
+var WIDEN_PATH = true
+var SQR_ROOMS = false # in case rooms need to be square
+var ROOM_SIZE_OFFSET = 5 # min 1, must be < PATH_LENGTH_OFFSET/2
+var PATH_LENGTH_OFFSET = 10
+
 func _init(starting_position, new_borders):
 	assert(new_borders.has_point(starting_position))
 	position = starting_position
@@ -19,7 +25,7 @@ func _init(starting_position, new_borders):
 func walk(steps):
 	create_room(position,4,true)
 	for step in steps:
-		if steps_since_turn >= 10:
+		if steps_since_turn >= PATH_LENGTH_OFFSET:
 			change_direction()
 		if step():
 			step_history.append(position)
@@ -33,13 +39,14 @@ func step():
 	if borders.has_point(target_position):
 		steps_since_turn += 1
 		position = target_position
-		widen(position)
+		if WIDEN_PATH:
+			widen(position)
 		return true
 	else:
 		return false
 	
 func change_direction():
-	var n = randi()%2 + 5
+	var n = randi()%2 + ROOM_SIZE_OFFSET
 	create_room(position,n,false)
 	steps_since_turn = 0
 	var directions = DIRECTIONS.duplicate()
@@ -58,6 +65,8 @@ func create_room(pos,n,start_pos):
 			room_exist = true
 	if room_exist == false:
 		var size = Vector2(randi() % 2 + n, randi() % 2 + n)
+		if SQR_ROOMS:
+			size.x = size.y
 		var top_left_corner = (pos - size/2).ceil()
 		var room_cells = []
 		for y in size.y:

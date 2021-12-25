@@ -38,9 +38,13 @@ func _ready():
 func _process(delta):
 	for i in active_cards:
 		if i.scene_change:
+			var world_val = i.WORLD_VALUE
 			for card in all_cards:
 				card.queue_free()
-			get_tree().change_scene("res://Worlds/Graveyard.tscn")
+			if world_val == 3:
+				get_tree().change_scene("res://Worlds/Harbour.tscn")
+			else:
+				get_tree().change_scene("res://Worlds/Graveyard.tscn")
 
 func switch_texture(n):
 	if n == 0:

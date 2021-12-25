@@ -1,0 +1,216 @@
+[gd_scene load_steps=30 format=2]
+
+[ext_resource path="res://Sprites/e_h_neko.png" type="Texture" id=1]
+[ext_resource path="res://EnemyEntity/e_h_neko.gd" type="Script" id=2]
+
+[sub_resource type="AtlasTexture" id=16]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=17]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 32, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=18]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 64, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=19]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 96, 0, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=26]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=27]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 32, 64, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=28]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=29]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 32, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=30]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 64, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=31]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 96, 32, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=38]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 96, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=20]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=21]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 32, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=22]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 64, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=23]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 96, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=39]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 128, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=40]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 160, 96, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=13]
+animations = [ {
+"frames": [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 26 ), SubResource( 27 ) ],
+"loop": true,
+"name": "damaged",
+"speed": 2.0
+}, {
+"frames": [ SubResource( 28 ), SubResource( 29 ), SubResource( 30 ), SubResource( 31 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 38 ) ],
+"loop": true,
+"name": "attack_ready",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 20 ), SubResource( 21 ), SubResource( 22 ), SubResource( 23 ) ],
+"loop": true,
+"name": "attack_start",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 39 ), SubResource( 40 ) ],
+"loop": true,
+"name": "attack_launch",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=14]
+extents = Vector2( 13.9678, 4.61272 )
+
+[sub_resource type="RectangleShape2D" id=15]
+extents = Vector2( 12.2549, 15.267 )
+
+[sub_resource type="AtlasTexture" id=32]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 0, 128, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=33]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 32, 128, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=34]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 64, 128, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=35]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 64, 64, 32, 32 )
+
+[sub_resource type="SpriteFrames" id=36]
+animations = [ {
+"frames": [ SubResource( 32 ), SubResource( 33 ), SubResource( 34 ) ],
+"loop": true,
+"name": "New Anim",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 35 ) ],
+"loop": true,
+"name": "none",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=37]
+extents = Vector2( 16.188, 7.21359 )
+
+[sub_resource type="CircleShape2D" id=41]
+radius = 121.171
+
+[node name="KinematicBody2D" type="KinematicBody2D"]
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 13 )
+animation = "attack_launch"
+flip_h = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 1.00423, 1.70676 )
+shape = SubResource( 14 )
+
+[node name="HitBox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2( 1.49831, 1.12373 )
+shape = SubResource( 15 )
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+
+[node name="PlayerDetect" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( -300, 0 )
+collision_mask = 4
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="attackEffect" type="AnimatedSprite" parent="."]
+frames = SubResource( 36 )
+animation = "New Anim"
+offset = Vector2( 8, 0 )
+flip_h = true
+
+[node name="AttackBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackBox"]
+shape = SubResource( 37 )
+
+[node name="AttackRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
+shape = SubResource( 41 )
+
+[connection signal="body_entered" from="AttackBox" to="." method="_on_AttackBox_body_entered"]
+[connection signal="body_exited" from="AttackBox" to="." method="_on_AttackBox_body_exited"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_AttackRange_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_AttackRange_body_exited"]
